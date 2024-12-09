@@ -1,0 +1,7 @@
+resources/models/player_hitbox.txt,player_hitbox
+resources/models/monkey.txt,monkey_head
+resources/models/fish.txt,fish
+resources/models/cube.txt,cube
+resources/models/big_plane.txt,plane
+resources/models/zombie_hitbox.txt,zombie_hitbox
+resources/models/sphere.txt,sphere

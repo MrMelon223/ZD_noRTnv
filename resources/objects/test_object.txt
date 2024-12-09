@@ -1,0 +1,6 @@
+zombie_test
+zombie_hitbox
+zombie_hitbox
+100.0
+1
+1

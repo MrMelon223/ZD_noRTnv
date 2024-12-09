@@ -1,0 +1,1 @@
+resources/objects/test_object.txt

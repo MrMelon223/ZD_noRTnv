@@ -1,0 +1,1 @@
+resources/textures/checkerboard.png,css_default
