@@ -1,6 +1,8 @@
 	// ZDcamera.cpp
 #include "../include/ZDcamera.h"
 
+float controller_look_sensitivity = 0.5f;
+
 ZDcamera::ZDcamera(int_t width, int_t height, float fov, vec3_t position, vec3_t direction) {
 
 	this->width = width;
@@ -79,8 +81,8 @@ void ZDcamera::update_direction(float x, float y) {
 
 void ZDcamera::update_direction() {
 
-	float yaw = this->rotation.x * (PI / 180.0f),
-		pitch = this->rotation.y * (PI / 180.0f);
+	float yaw = this->rotation.x * (PI / 180.0f) * controller_look_sensitivity,
+		pitch = this->rotation.y * (PI / 180.0f) * controller_look_sensitivity;
 
 	if (this->rotation.x < 0.0f) {
 		this->rotation.x = fmod(this->rotation.x, -2.0f * PI);
@@ -135,26 +137,38 @@ void ZDcamera::left(float t) {
 }
 
 void ZDcamera::turn_right(float t) {
-	this->rotation.y += 0.1f;
-	this->rotation.y = fmod(this->rotation.y, 2.0f * PI);
+	float rot = 0.1f * controller_look_sensitivity;
+	if (rot >= ZDcamera::DEADZONE) {
+		this->rotation.y += rot;
+		this->rotation.y = fmod(this->rotation.y, 2.0f * PI);
+	}
 }
 void ZDcamera::turn_left(float t) {
-	this->rotation.y -= 0.1f;
-	this->rotation.y = fmod(this->rotation.y, 2.0f * PI);
+	float rot = 0.1f * controller_look_sensitivity;
+	if (rot >= ZDcamera::DEADZONE) {
+		this->rotation.y -= rot;
+		this->rotation.y = fmod(this->rotation.y, 2.0f * PI);
+	}
 }
 
 void ZDcamera::turn_up(float t) {
-	this->rotation.x -= 0.1f;
-	this->rotation.x = fmod(this->rotation.y, 2.0f * PI);
+	float rot = 0.1f * controller_look_sensitivity;
+	if (rot >= ZDcamera::DEADZONE) {
+		this->rotation.x -= rot;
+		this->rotation.x = fmod(this->rotation.y, 2.0f * PI);
+	}
 }
 void ZDcamera::turn_down(float t) {
-	this->rotation.x += 0.1f;
-	this->rotation.x = fmod(this->rotation.y, 2.0f * PI);
+	float rot = 0.1f * controller_look_sensitivity;
+	if (rot >= ZDcamera::DEADZONE) {
+		this->rotation.x += rot;
+		this->rotation.x = fmod(this->rotation.x, 2.0f * PI);
+	}
 }
 
 void ZDcamera::turn_right_for(float t) {
 	if (t >= DEADZONE || t <= -DEADZONE) {
-		this->rotation.y += t * 0.1f;
+		this->rotation.y += t * 0.1f * controller_look_sensitivity;
 
 		if (this->rotation.y < 0.0f) {
 			this->rotation.y = fmod(this->rotation.y, -2.0f * PI);
@@ -167,7 +181,7 @@ void ZDcamera::turn_right_for(float t) {
 }
 void ZDcamera::look_up_for(float t) {
 	if (t >= DEADZONE || t <= -DEADZONE) {
-		this->rotation.x += t * 0.1f;
+		this->rotation.x += t * 0.1f * controller_look_sensitivity;
 	}
 	if (this->rotation.x < 0.0f) {
 		this->rotation.x = fmod(this->rotation.x, -2.0f * PI);

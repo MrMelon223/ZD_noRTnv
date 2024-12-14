@@ -3,6 +3,8 @@
 
 #include "ZDframebuffer.h"
 
+extern float controller_look_sensitivity;
+
 struct d_ZDcamera;
 struct d_ZDfrustrum;
 
