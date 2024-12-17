@@ -8,8 +8,8 @@
 #include <sstream>
 #include <vector>
 #include <queue>
+#include <float.h>
 #include <stb_image.h>
-
 
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"

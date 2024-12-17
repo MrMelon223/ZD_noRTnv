@@ -97,7 +97,7 @@ ZDlevel::ZDlevel(std::string file_path, std::string name) {
 	this->name = name;
 	this->load_from(file_path);
 
-	this->camera = new ZDcamera(1280, 720, 120.0f, vec3_t{ 100.0f, 100.0f, 100.0f }, vec3_t{ 0.0f, 0.0f, -1.0f });
+	this->camera = new ZDcamera(1280, 720, 120.0f, vec3_t{ 101.0f, 101.0f, 101.0f }, vec3_t{ 0.0f, 0.0f, -1.0f });
 }
 
 d_ZDmodel* ZDlevel::models_to_gpu() {

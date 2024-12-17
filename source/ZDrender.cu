@@ -117,22 +117,21 @@ void transform_vertices(d_ZDmodel* models, d_ZDinstance* instances, d_ZDcamera* 
 		for (uint_t i = 0; i < inst->vertex_count; i++) {
 			//if (inst->visible_triangles[i]) {
 			vec3_t v0 = positions[i];
-			v0 = (camera->position - v0);
+			v0 = (v0 - inst->position);
 
 			vec4_t v = rotation * vec4_t(v0.x, v0.y, v0.z, 0.0f);
 			v = cam_mtx * v;
 			v = perspect * v;
 
-			v0 = vec3_t(v.x, v.y, v.z);
+			v0 = vec3_t(v.x, v.y, v.z) * inst->scale;
+			v0 = (v0 + inst->position);
 
-
-			inst->transformed_vertices[i] = vec3_t{ inst->scale * v0.x, inst->scale * v0.y, inst->scale * v0.z };
+			inst->transformed_vertices[i] = vec3_t{ v0.x, v0.y, v0.z };
 		}
 		for (uint_t i = 0; i < inst->triangle_count; i++) {
 			vec3_t v0 = normals[i];
-			//v0 = ZD::add_v3(v0, ZD::subtract_v3(d_camera->position, inst->position));
 
-			vec4_t n_t = rotation * vec4_t(v0.x, v0.y, v0.z, 0.0f);
+			vec4_t n_t = cam_mtx * vec4_t(v0.x, v0.y, v0.z, 0.0f);
 			//v0 = ZD::to_vec3(ZD::product_m4(cam_mtx, ZD::to_vec4(v0, 0.0f)));
 			v0 = vec3_t(n_t.x, n_t.y, n_t.z);
 
@@ -343,13 +342,17 @@ void flat_shade(color_t* color_buff, float* depth_buff, d_ZDmodel* models, d_ZDi
 
 			float intensity = point_lights[k].intensity / (mag * mag * point_lights[k].falloff_distance);
 			float bright = glm::dot(to_light, smp->triangle_normal);
-			//if (bright >= 0.0f) {
-				pixel += point_lights[k].diffuse_color;
-			//}
-			cum_intensity += /*bright */ intensity;
+			if (bright >= 0.0f) {
+				pixel += point_lights[k].diffuse_color * bright;
+				cum_intensity += intensity;
+			}
+			else {
+				pixel += point_lights[k].diffuse_color * FLT_EPSILON;
+				cum_intensity += FLT_EPSILON;
+			}
 
 		}
-		color_buff[y * width + x] = (cum_intensity * t_samp) + (cum_intensity * pixel);
+		color_buff[y * width + x] = (cum_intensity * t_samp) + (pixel);
 	}
 }
 

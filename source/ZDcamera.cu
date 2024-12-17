@@ -113,7 +113,7 @@ void ZDcamera::update_direction() {
 }
 
 void ZDcamera::forward(float t) {
-	this->position = this->position + glm::normalize(this->direction) * t * 0.01f;
+	this->position = this->position + glm::normalize(this->direction) * t * 0.5f;
 
 	if (this->position.x < 0.0f) {
 		this->position.x = 0.0f;
@@ -127,13 +127,13 @@ void ZDcamera::forward(float t) {
 }
 
 void ZDcamera::backward(float t) {
-	this->position = this->position - glm::normalize(this->direction) * t * 0.01f;
+	this->position = this->position - glm::normalize(this->direction) * t * 0.5f;
 }
 void ZDcamera::right(float t) {
-	this->position = this->position - glm::cross(this->direction, vec3_t(1.0f, 0.0f, 0.0f)) * t * 0.01f;
+	this->position = this->position - glm::cross(this->direction, vec3_t(0.0f, 1.0f, 0.0f)) * t * 0.5f;
 }
 void ZDcamera::left(float t) {
-	this->position = this->position + glm::cross(this->direction, vec3_t(1.0f, 0.0f, 0.0f)) * t * 0.01f;
+	this->position = this->position + glm::cross(this->direction, vec3_t(0.0f, 1.0f, 0.0f)) * t * 0.5f;
 }
 
 void ZDcamera::turn_right(float t) {

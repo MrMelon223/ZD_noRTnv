@@ -18,15 +18,15 @@ void ZDtexture::load_from(std::string file_path) {
 	for (int_t y = 0; y < this->height; y++) {
 		for (int_t x = 0; x < this->width; x++) {
 			if (this->channels == 1) {
-				this->data.push_back(color_t{ static_cast<float>(raw[y * 1 + (x)]) / 255.0f,
-					static_cast<float>(raw[y * 1 + (x)]) / 255.0f,
-					static_cast<float>(raw[y * 1 + (x)]) / 255.0f,
-					static_cast<float>(raw[y * 1 + (x)]) / 255.0f });
+				this->data.push_back(color_t{ static_cast<float>(raw[(y * 1) * this->width + (x)]) / 255.0f,
+					static_cast<float>(raw[(y * 1) * this->width + (x)]) / 255.0f,
+					static_cast<float>(raw[(y * 1) * this->width + (x)]) / 255.0f,
+					static_cast<float>(raw[(y * 1) * this->width + (x)]) / 255.0f });
 			}
 			else if (this->channels == 3) {
-				this->data.push_back(color_t{ static_cast<float>(raw[y * 3 + (x)]) / 255.0f,
-					static_cast<float>(raw[y * 3 + (x + 1)]) / 255.0f,
-					static_cast<float>(raw[y * 3 + (x + 2)]) / 255.0f,
+				this->data.push_back(color_t{ static_cast<float>(raw[(y * 3) * this->width + (x)]) / 255.0f,
+					static_cast<float>(raw[(y * 3) * this->width + (x + 1)]) / 255.0f,
+					static_cast<float>(raw[(y * 3) * this->width + (x + 2)]) / 255.0f,
 					1.0f });
 			}
 			else if (channels == 4) {

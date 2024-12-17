@@ -25,7 +25,7 @@ struct d_ZDtexture {
 	color_t* data;
 
 	__device__ inline color_t sample(float x, float y) {
-		if (x >= 0.0f && x <= 1.0f && y >= 0.0f && y < 1.0f) {
+		if (x >= 0.0f && x <= 1.0f && y >= 0.0f && y <= 1.0f) {
 			return data[static_cast<int_t>(y * this->height) * this->width + static_cast<int_t>(x * this->width)];
 		}
 		else {
