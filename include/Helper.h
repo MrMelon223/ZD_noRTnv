@@ -1,6 +1,8 @@
 #ifndef HELPER_H
 #define HELPER_H
 
+#pragma comment(lib, "opengl32.lib")
+
 #include <string>
 #include <iostream>
 #include <iomanip>

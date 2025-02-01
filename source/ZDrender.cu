@@ -168,17 +168,23 @@ void draw_instances(color_t* color_buff, float* depth_buff, d_ZDmodel* models, d
 		mat4_t rotation_z = glm::rotate(mat4_t(1.0f), inst->rotation.z, vec3_t(0.0f, 0.0f, 1.0f));
 		mat4_t rotation = rotation_x * rotation_y * rotation_z;
 
+		vec4_t position_offset = vec4_t(camera->position - inst->position, 1.0f);
+
 		for (uint_t i = 0; i < inst->vertex_count; i++) {
 			//if (inst->visible_triangles[i]) {
-			vec4_t v0 = vec4_t(positions[i].x, positions[i].y, positions[i].z, 0.0f);
-			v0 = v0 + vec4_t(camera->position - inst->position, 0.0f);
+			vec4_t v0 = vec4_t(positions[i].x, positions[i].y, positions[i].z, 1.0f);
 
 			v0 = rotation * v0;
 			v0 = cam_mtx * v0;
 			v0 = perspect * v0;
 
+			v0 = v0 * inst->scale;
 
-			inst->transformed_vertices[i] = vec3_t{ inst->scale * v0.x, inst->scale * v0.y, inst->scale * v0.z };
+			v0 = v0 + position_offset;
+
+
+
+			inst->transformed_vertices[i] = vec3_t{ v0.x, v0.y, v0.z };
 		}
 		for (uint_t i = 0; i < inst->triangle_count; i++) {
 			vec4_t v0 = vec4_t(normals[i].x, normals[i].y, normals[i].z, 0.0f);
@@ -186,7 +192,6 @@ void draw_instances(color_t* color_buff, float* depth_buff, d_ZDmodel* models, d
 
 			v0 = rotation * v0;
 			//v0 = ZD::to_vec3(ZD::product_m4(cam_mtx, ZD::to_vec4(v0, 0.0f)));
-
 
 			inst->transformed_normals[i] = vec3_t(v0.x, v0.y, v0.z);
 		}
@@ -255,8 +260,8 @@ void interpolate_instances(color_t* color_buff, float* depth_buff, d_ZDmodel* mo
 							sign3 = line_equation(normalized_coord, v2a, v0a);
 
 
-						if ((sign1 >= 0.0f && sign2 >= 0.0f && sign3 >= 0.0f) ||
-							(sign1 <= 0.0f && sign2 <= 0.0f && sign3 <= 0.0f)) {
+						if ((sign1 > 0.0f && sign2 > 0.0f && sign3 > 0.0f) ||
+							(sign1 < 0.0f && sign2 < 0.0f && sign3 < 0.0f)) {
 							uv_t min = { glm::min(v0a.x, glm::min(v1a.x, v2a.x)), glm::min(v0a.y, glm::min(v1a.y, v2a.y)) };
 							uv_t max = { glm::max(v0a.x, glm::max(v1a.x, v2a.x)), glm::max(v0a.y, glm::max(v1a.y, v2a.y)) };
 							uv_t comp_coord = uv_t{ (static_cast<float>(x) - min.x) / (max.x - min.x), (static_cast<float>(y) - min.y) / (max.y - min.y) };
@@ -342,7 +347,7 @@ void flat_shade(color_t* color_buff, float* depth_buff, d_ZDmodel* models, d_ZDi
 
 			float intensity = point_lights[k].intensity / (mag * mag * point_lights[k].falloff_distance);
 			float bright = glm::dot(to_light, smp->triangle_normal);
-			if (bright >= 0.0f) {
+			if (bright > 0.0f) {
 				pixel += point_lights[k].diffuse_color * bright;
 				cum_intensity += intensity;
 			}
@@ -354,6 +359,7 @@ void flat_shade(color_t* color_buff, float* depth_buff, d_ZDmodel* models, d_ZDi
 		}
 		color_buff[y * width + x] = (cum_intensity * t_samp) + (pixel);
 	}
+
 }
 
 void ZDrender::draw(d_ZDframebuffer* buff, d_ZDmodel* models, d_ZDtexture* textures, d_ZDinstance* instances, d_ZDcamera* camera, int_t instance_count, d_ZDpoint_light* point_lights, int_t light_count, d_ZDambient_light* ambient_light) {

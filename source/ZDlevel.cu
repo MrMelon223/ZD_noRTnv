@@ -26,6 +26,15 @@ void ZDlevel::load_from(std::string path) {
 
 	std::string line;
 	std::getline(in, line);
+	std::istringstream name_parse(line);
+	name_parse >> this->name;
+
+	std::getline(in, this->description);
+
+	std::cout << std::setw(15) << "Name: " << this->name << std::endl;
+	std::cout << std::setw(15) << "Description: " << this->description << std::endl;
+
+	std::getline(in, line);
 	std::istringstream parse(line);
 	size_t leng = 0;
 
@@ -97,7 +106,7 @@ ZDlevel::ZDlevel(std::string file_path, std::string name) {
 	this->name = name;
 	this->load_from(file_path);
 
-	this->camera = new ZDcamera(1280, 720, 120.0f, vec3_t{ 101.0f, 101.0f, 101.0f }, vec3_t{ 0.0f, 0.0f, -1.0f });
+	this->camera = new ZDcamera(1920, 1080, 120.0f, vec3_t{ 2.0f, 1.0f, 1.0f }, vec3_t{ 0.0f, 0.0f, -1.0f });
 }
 
 d_ZDmodel* ZDlevel::models_to_gpu() {

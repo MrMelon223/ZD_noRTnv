@@ -205,6 +205,7 @@ void ZDapp::main_loop() {
 	}
 
 	this->window = glfwCreateWindow(this->width, this->height, "ZDnoRT", NULL, NULL);
+	glfwMakeContextCurrent(this->window);
 	glfwSetKeyCallback(this->window, keyboard_callback);
 	glfwSetMouseButtonCallback(this->window, mouse_callback);
 
@@ -264,10 +265,12 @@ void ZDapp::main_loop() {
 		else {
 			glfwGetCursorPos(this->window, &x, &y);
 			glfwSetCursorPos(this->window, 0.5 * static_cast<double>(this->width), 0.5 * static_cast<double>(this->height));
-			this->current_level->get_camera()->update_direction(static_cast<float>(x), static_cast<float>(y));
+			camera->turn_right_for(static_cast<float>(x - (0.5 * static_cast<double>(this->width))));
+			camera->look_up_for(static_cast<float>(y - (0.5 * static_cast<double>(this->width))));
+			//this->current_level->get_camera()->update_direction(static_cast<float>(x), static_cast<float>(y));
 		}
 
-		this->current_level->get_camera()->update_direction();
+		camera->update_direction();
 
 		this->empty_queues();
 
@@ -280,7 +283,6 @@ void ZDapp::main_loop() {
 		cudaFree(sample_ptr);
 		cudaFree(d_cam);
 	}
-
 
 	cudaFree(d_instances);
 }

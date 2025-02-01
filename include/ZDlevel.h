@@ -7,7 +7,7 @@
 
 class ZDlevel {
 protected:
-	std::string file_path, name;
+	std::string file_path, name, description;
 
 	std::vector<ZDmodel> host_models;
 	std::vector<d_ZDmodel> device_models;
